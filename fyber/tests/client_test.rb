@@ -128,6 +128,15 @@ describe Fyber::Client do
       expect{client.offers("player2", "campaign", 1)}.to raise_error Fyber::Forbidden
     end
 
+    it "On 401 raises Unauthorized Exception" do
+      @stubs.get('feed/v1/offers.json') { |env| [401, {}, ''] }
+
+      client = Fyber::Client.new(@options)
+
+      expect{client.offers("player2", "campaign", 1)}.to raise_error Fyber::Unauthorized
+    end
+
+
     it "On 400 raises BadRequest Exception" do
       @stubs.get('feed/v1/offers.json') { |env| [400, {}, ''] }
 

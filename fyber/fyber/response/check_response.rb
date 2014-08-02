@@ -12,12 +12,15 @@ module Fyber
       private
 
       def on_complete(env)
-        signature = env[:response_headers]['x-sponsorpay-response-signature']
-        api_key = Fyber::Default.api_key
-        body_with_api_key = "#{env[:body]}#{api_key}"
-        response_hash = Digest::SHA1.hexdigest body_with_api_key
-        if response_hash != signature
-          raise Fyber::InvalidTokenResponse
+        status_code = env[:status].to_i
+        if status_code == 200
+          signature = env[:response_headers]['x-sponsorpay-response-signature']
+          api_key = Fyber::Default.api_key
+          body_with_api_key = "#{env[:body]}#{api_key}"
+          response_hash = Digest::SHA1.hexdigest body_with_api_key
+          if response_hash != signature
+            raise Fyber::InvalidTokenResponse
+          end
         end
       end
     end
