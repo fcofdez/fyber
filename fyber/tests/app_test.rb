@@ -52,6 +52,20 @@ describe 'Fyber Challenge app' do
     expect(last_response.body).to include "Error: An invalid hashkey for this appid was given as a parameter in the request."
   end
 
+  it "Get offers" do
+    ENV['FYBER_DEVICE_ID']= '2b6f0cc904d137be2e1730235f5664094b83118'
+
+    params = {}
+    params[:uid] = "player2"
+    params[:pub0] = "campaign"
+    params[:page] = 1
+    post "/offers", params
+    expect(last_response).to be_ok
+    expect(last_response.body).to include "<div class=‘offer’>"
+    expect(last_response.body).to include "<div class=‘title’>RTP Best Mobile Contents</div>"
+  end
+
+
   it "Get error msg when parameters are wrong" do
     params = {}
     params[:uid] = "player2"
