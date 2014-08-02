@@ -45,6 +45,28 @@ describe Fyber::Client do
     end
   end
 
+  describe "Security checks" do
+    before do
+      @stubs = Faraday::Adapter::Test::Stubs.new
+
+      middleware = Fyber::Default.middleware
+      middleware.adapter :test, @stubs
+
+      @options = {}
+      @options[:builder] = middleware
+    end
+
+    it "Raises an exception if header hash is incorrect" do
+      json_response = File.read("tests/fixtures/jsonresponse")
+      response_headers = { 'content-type' => 'application/json',
+                           'x-sponsorpay-response-signature' => 'wrong'}
+      @stubs.get('feed/v1/offers.json') { |env| [200, response_headers, json_response] }
+      client = Fyber::Client.new(@options)
+      expect{client.offers("player2", "campaign", 1)}.to raise_error Fyber::InvalidTokenResponse
+    end
+
+  end
+
   describe "api calls" do
 
     before do
