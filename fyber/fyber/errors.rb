@@ -10,7 +10,7 @@ module Fyber
                    when 404 then Fyber::NotFound
                    when 500 then Fyber::InternalServerError
                  end
-        klass.new(response)
+        klass.new(klass)
       end
     end
   end
