@@ -1,0 +1,19 @@
+<%if @offers.empty? then %>
+    <div class=‘no_offers’>
+
+        No offers
+
+    </div>
+<% else %>
+    <% @offers.each do |offer| %>
+        <div class=‘offer’>
+
+            <div class=‘title’>offer.title</div>
+
+            <div class=‘payout’>offer.payout</div>
+
+            <div class=‘thumbnail’>offer.thumbnail_url</div>
+
+        </div>
+    <% end %>
+<% end %>
