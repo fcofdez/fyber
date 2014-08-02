@@ -1,7 +1,10 @@
-module Fyber
+require 'json'
 
+module Fyber
   class Offers
-    def initialize(response_body)
+    attr_accessor :document
+    def initialize(response)
+      @document = response
     end
   end
 end

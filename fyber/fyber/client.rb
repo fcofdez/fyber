@@ -1,9 +1,9 @@
 require_relative 'default'
+require_relative 'offer_list'
 require_relative 'errors'
 require 'faraday'
 require 'addressable/uri'
 require 'digest/sha1'
-
 
 
 module Fyber
@@ -16,7 +16,12 @@ module Fyber
         instance_variable_set(:"@#{key}", options[key] || value)
       end
 
-      @conn = Faraday.new(url: Fyber::Default.api_endpoint)
+      connection_options = @connection_options
+      puts connection_options
+      connection_options = {}
+      connection_options[:builder] = @middleware
+      connection_options[:url] = Fyber::Default.api_endpoint
+      @conn = Faraday.new(connection_options)
 
     end
 
@@ -56,20 +61,10 @@ module Fyber
       options
     end
 
-    def check_response(response)
-      signature = response.headers['x-sponsorpay-response-signature']
-      body_with_api_key = "#{response.body}#{@api_key}"
-      response_hash = Digest::SHA1.hexdigest body_with_api_key
-      if response_hash != signature
-        raise Fyber::InvalidTokenResponse
-      end
-    end
-
     def offers(uid, pub0, page)
       options = options(uid, pub0, page)
       response = @conn.get offers_path, options
-      check_response(response)
-      response
+      Fyber::Offers.new(response.body)
     end
 
     def offers_path

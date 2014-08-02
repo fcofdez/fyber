@@ -1,3 +1,9 @@
+require 'faraday'
+require_relative 'response/process_error'
+require_relative 'response/parse_json'
+require_relative 'response/check_response'
+
+
 module Fyber
 
     module Default
@@ -8,12 +14,12 @@ module Fyber
 
         USER_AGENT   = "Fyber Ruby Client".freeze
 
-        # # Default Faraday middleware stack
-        # MIDDLEWARE = RACK_BUILDER_CLASS.new do |builder|
-        #     builder.use Octokit::Response::RaiseError
-        #     builder.use Octokit::Response::FeedParser
-        #     builder.adapter Faraday.default_adapter
-        # end
+        MIDDLEWARE = Faraday::RackBuilder.new do |builder|
+            builder.use Fyber::Response::ProcessError
+            builder.use Fyber::Response::JsonParser
+            builder.use Fyber::Response::HashChecker
+            builder.adapter Faraday.default_adapter
+        end
 
         class << self
 
@@ -25,6 +31,8 @@ module Fyber
                     :appid,
                     :offer_types,
                     :locale,
+                    :connection_options,
+                    :middleware,
                     :default_media_type,
                     :user_agent
                 ]
@@ -54,6 +62,10 @@ module Fyber
 
             def api_endpoint
                 ENV['FYBER_API_ENDPOINT'] || API_ENDPOINT
+            end
+
+            def middleware
+              MIDDLEWARE
             end
 
             def device_id
