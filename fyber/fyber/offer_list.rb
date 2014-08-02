@@ -2,8 +2,12 @@ module Fyber
 
   class Offer
 
+    attr_accessor :title, :payout, :thumbnail_url
+
     def initialize(offer_json)
-      @offer = offer_json
+      @title = offer_json["title"]
+      @payout = offer_json["payout"]
+      @thumbnail_url = offer_json["thumbnail"]["lowres"]
     end
 
   end

@@ -52,12 +52,34 @@ describe Fyber::Client do
 
       middleware = Faraday::RackBuilder.new do |builder|
         builder.use Fyber::Response::ProcessError
+        builder.use Fyber::Response::JsonParser
         builder.adapter :test, @stubs
       end
 
       @options = {}
       @options[:builder] = middleware
 
+    end
+
+    it "Generate OfferList object" do
+      json_response = File.read("tests/fixtures/jsonresponse")
+      @stubs.get('feed/v1/offers.json') { |env| [200, {'content-type' => 'application/json'}, json_response] }
+
+      client = Fyber::Client.new(@options)
+      offers = client.offers("player2", "campaign", 1)
+      expect(offers.first).not_to be_nil
+      expect(offers.first.title).to eq(" Tap  Fish")
+      expect(offers.first.payout).to eq("90")
+      expect(offers.first.thumbnail_url).to eq("http://cdn.sponsorpay.com/assets/1808/icon175x175- 2_square_60.png")
+    end
+
+    it "Process empty response" do
+      json_response = File.read("tests/fixtures/emptyresponse")
+      @stubs.get('feed/v1/offers.json') { |env| [200, {'content-type' => 'application/json'}, json_response] }
+
+      client = Fyber::Client.new(@options)
+      offers = client.offers("player2", "campaign", 1)
+      expect(offers).to be_empty
     end
 
     it "On 404 raises NotFound Exception" do
