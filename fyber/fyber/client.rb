@@ -17,10 +17,9 @@ module Fyber
       end
 
       connection_options = @connection_options
-      puts connection_options
-      connection_options = {}
       connection_options[:builder] = @middleware
       connection_options[:url] = Fyber::Default.api_endpoint
+
       @conn = Faraday.new(connection_options)
 
     end
@@ -40,10 +39,6 @@ module Fyber
     # It should calculate device ip instead of a hardcoded one.
     def ip
       '109.235.143.113'
-    end
-
-    def format
-      'json'
     end
 
     def options(uid, pub0, page)

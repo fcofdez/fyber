@@ -31,6 +31,7 @@ module Fyber
                     :appid,
                     :offer_types,
                     :locale,
+                    :format,
                     :connection_options,
                     :middleware,
                     :default_media_type,
@@ -58,6 +59,10 @@ module Fyber
 
             def appid
               ENV['FYBER_APPID']
+            end
+
+            def format
+              'json'
             end
 
             def api_endpoint
