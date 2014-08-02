@@ -1,6 +1,7 @@
 require_relative 'default'
 require_relative 'offer_list'
 require_relative 'errors'
+require_relative 'endpoints/offers'
 require 'faraday'
 require 'addressable/uri'
 require 'digest/sha1'
@@ -9,6 +10,8 @@ require 'digest/sha1'
 module Fyber
 
   class Client
+
+    include Fyber::Client::Offers
 
     def initialize(options = {})
 
@@ -56,15 +59,6 @@ module Fyber
       options
     end
 
-    def offers(uid, pub0, page)
-      options = options(uid, pub0, page)
-      response = @conn.get offers_path, options
-      Fyber::Offers.new(response.body)
-    end
-
-    def offers_path
-      "feed/v1/offers.json"
-    end
 
   end
 
