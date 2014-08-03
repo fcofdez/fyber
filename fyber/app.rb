@@ -6,7 +6,7 @@ get '/' do
   erb :offers_form
 end
 
-post '/offers' do
+get '/offers' do
   client = Fyber::Client.new
   begin
     @offers = client.offers(params["uid"], params["pub0"], params["page"])

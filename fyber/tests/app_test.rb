@@ -34,7 +34,7 @@ describe 'Fyber Challenge app' do
     params[:uid] = "player2"
     params[:pub0] = "campaign"
     params[:page] = 1
-    post "/offers", params
+    get "/offers", params
     expect(last_response).to be_ok
     expect(last_response.body).to include "No offers"
     expect(last_response.body).to include "New search"
@@ -47,7 +47,7 @@ describe 'Fyber Challenge app' do
     params[:uid] = "player2"
     params[:pub0] = "campaign"
     params[:page] = 1
-    post "/offers", params
+    get "/offers", params
     expect(last_response).to be_ok
     expect(last_response.body).to include "Error: An invalid hashkey for this appid was given as a parameter in the request."
   end
@@ -59,7 +59,7 @@ describe 'Fyber Challenge app' do
     params[:uid] = "player2"
     params[:pub0] = "campaign"
     params[:page] = 1
-    post "/offers", params
+    get "/offers", params
     expect(last_response).to be_ok
     expect(last_response.body).to include "<div class=‘offer’>"
     expect(last_response.body).to include "<div class=‘title’>RTP Best Mobile Contents</div>"
@@ -71,7 +71,7 @@ describe 'Fyber Challenge app' do
     params[:uid] = "player2"
     params[:pub0] = "campaign"
     params[:page] = 0
-    post "/offers", params
+    get "/offers", params
     expect(last_response).to be_ok
     expect(last_response.body).to include "Error: A non-existing page was requested with the parameter page."
   end
